@@ -23,11 +23,13 @@ void setup() {
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
 #endif
   // End of trinket special code
-
+  Serial.begin(9600);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   //powerOn(strip.Color(255, 150, 110), 750);
-  //powerOn(245,0,245, 500, 25);
+  powerOn(0,100,0, 50);
+  delay(1000);
+  powerOff();
 }
 
 void loop() {
@@ -41,8 +43,8 @@ void loop() {
  // theaterChase(strip.Color(  0,   0, 127), 50); // Blue
  // 255 152 96
  
- powerOn(245,0,245, 500, 25);
- delay(10);
+ //powerOn(0,100,0, 100);
+ //delay(10);
  /*
  powerOn(strip.Color(255, 0, 0), 100);
  powerOn(strip.Color(0, 255, 0), 100);
@@ -55,19 +57,55 @@ void loop() {
  // theaterChaseRainbow(50);
 }
 
-void powerOn(uint16_t r, uint16_t g, uint16_t b, uint16_t wait, uint16_t fadeTime) {
+uint8_t splitColor ( uint32_t c, char value )
+{
+  switch ( value ) {
+    case 'r': return (uint8_t)(c >> 16);
+    case 'g': return (uint8_t)(c >>  8);
+    case 'b': return (uint8_t)(c >>  0);
+    default:  return 0;
+  }
+}
+
+void powerOn(int r, int g, int b, int wait) {
  // uint8_t a = 0;
-  for(uint8_t a = 0; a < strip.numPixels()/2; a++) {
-    strip.setPixelColor(a, strip.Color(r,g,b));
-    strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(r,g,b));
-    strip.show();
+  for(int a = 0; a < strip.numPixels()/2; a++) {
+    for(int i = 1; i <= 100; i++) {
+      double percentage = (double)i/100;
+      int red = percentage * r;
+      int green = percentage * g;
+      int blue = percentage * b;
+    //  Serial.println(red);
+    //  Serial.println(green);
+    //  Serial.println(blue);
+      Serial.println(percentage);
+      strip.setPixelColor(a, strip.Color(red,green,blue));
+      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red,green,blue));
+      strip.show();
+      delay(5);
+    }
     delay(wait);
   }
-  for(uint8_t a = strip.numPixels()/2 - 1; a >= 0; a--) {
-    strip.setPixelColor(a, strip.Color(0,0,0));
-    strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(0,0,0));
-    strip.show();
-    delay(wait);
+}
+
+void powerOff() {
+  for(int a = 0; a < strip.numPixels(); a++) {
+    for(double k = 100; k >= 0; k--) {
+      double percentage = k/100.0;
+      uint32_t colorVal = strip.getPixelColor(a);
+      Serial.println(colorVal);
+      double r = splitColor(colorVal, 'r');
+      double g = splitColor(colorVal, 'g');
+      double b = splitColor(colorVal, 'b');
+      r = (double)r * percentage;
+      g = (double)g * percentage;
+      b = (double)b * percentage;
+     // Serial.println(r);
+      strip.setPixelColor(a, strip.Color((int)r,(int)g,(int)b));
+      delay(3);
+      strip.show();
+    }
+    delay(10);
   }
 }
 
@@ -94,7 +132,7 @@ void rainbow(uint8_t wait) {
 }
 */
 
-/*
+
 // Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
@@ -107,7 +145,6 @@ void rainbowCycle(uint8_t wait) {
     delay(wait);
   }
 }
-*/
 
 /*
 //Theatre-style crawling lights.
