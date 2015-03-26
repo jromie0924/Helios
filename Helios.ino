@@ -27,7 +27,7 @@ void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   //powerOn(strip.Color(255, 150, 110), 750);
-  powerOn(255,255,255, 10, 25);
+  //powerOn(245,0,245, 500, 25);
 }
 
 void loop() {
@@ -35,13 +35,14 @@ void loop() {
  // colorWipe(strip.Color(255, 0, 0), 50); // Red
  // colorWipe(strip.Color(0, 255, 0), 50); // Green
  // colorWipe(strip.Color(0, 0, 255), 50); // Blue
-  // Send a theater pixel chase in...
+  // Send a theater pxel chase in...
  // theaterChase(strip.Color(127, 127, 127), 50); // White
  // theaterChase(strip.Color(127,   0,   0), 50); // Red
  // theaterChase(strip.Color(  0,   0, 127), 50); // Blue
  // 255 152 96
  
- //powerOn(strip.Color(255, 150, 110), 750);
+ powerOn(245,0,245, 500, 25);
+ delay(10);
  /*
  powerOn(strip.Color(255, 0, 0), 100);
  powerOn(strip.Color(0, 255, 0), 100);
@@ -55,17 +56,17 @@ void loop() {
 }
 
 void powerOn(uint16_t r, uint16_t g, uint16_t b, uint16_t wait, uint16_t fadeTime) {
-  uint8_t a = 0;
-  while(a < strip.numPixels()/2) {
-    for(uint32_t i=0; i < 100; i++) {
-      double percent = (double)i/100;
-      strip.setPixelColor(a, strip.Color((uint16_t)percent*r, (uint16_t)percent*g, (uint16_t)percent*b));
-      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color((uint16_t)percent*r, (uint16_t)percent*g, (uint16_t)percent*b));
-      strip.show();
-      delay(fadeTime);
-    }
-    //strip.show();
-    a++;
+ // uint8_t a = 0;
+  for(uint8_t a = 0; a < strip.numPixels()/2; a++) {
+    strip.setPixelColor(a, strip.Color(r,g,b));
+    strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(r,g,b));
+    strip.show();
+    delay(wait);
+  }
+  for(uint8_t a = strip.numPixels()/2 - 1; a >= 0; a--) {
+    strip.setPixelColor(a, strip.Color(0,0,0));
+    strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(0,0,0));
+    strip.show();
     delay(wait);
   }
 }
