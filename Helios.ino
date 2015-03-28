@@ -2,6 +2,9 @@
 #include <avr/power.h>
 
 #define PIN 6
+int red = 245;
+int green = 245;
+int blue = 0;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -27,7 +30,7 @@ void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   //powerOn(strip.Color(255, 150, 110), 750);
-  powerOn(0,100,0, 50);
+  powerOn(red, green, blue, 500);
   delay(1000);
   powerOff();
 }
@@ -82,14 +85,14 @@ void powerOn(int r, int g, int b, int wait) {
       strip.setPixelColor(a, strip.Color(red,green,blue));
       strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red,green,blue));
       strip.show();
-      delay(5);
+      delay(10);
     }
     delay(wait);
   }
 }
 
 void powerOff() {
-  for(int a = 0; a < strip.numPixels(); a++) {
+  for(int a = strip.numPixels()/2; a >=0; a--) {
     for(double k = 100; k >= 0; k--) {
       double percentage = k/100.0;
       uint32_t colorVal = strip.getPixelColor(a);
@@ -102,7 +105,8 @@ void powerOff() {
       b = (double)b * percentage;
      // Serial.println(r);
       strip.setPixelColor(a, strip.Color((int)r,(int)g,(int)b));
-      delay(3);
+      strip.setPixelColor(((strip.numPixels() - 1) -a), strip.Color((int)r,(int)g,(int)b));
+      delay(10);
       strip.show();
     }
     delay(10);
