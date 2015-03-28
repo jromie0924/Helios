@@ -1,10 +1,12 @@
 #include <Adafruit_NeoPixel.h>
 #include <avr/power.h>
+#include <Time.h>
 
 #define PIN 6
 int red = 245;
 int green = 245;
 int blue = 0;
+int randRed, randGreen, randBlue, randPix;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -27,14 +29,41 @@ void setup() {
 #endif
   // End of trinket special code
   Serial.begin(9600);
+  setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  powerOn(red, green, blue, 5);
+  //powerOn(red, green, blue, 5);
   delay(1000);
  // powerOff();
 }
-
+/*
+ * 25 + ( std::rand() % ( 63 - 25 + 1 ) ) --> random number from 25-63
+ * use for random pixel "liveliness"
+ */ 
 void loop() {
+  srand(now());
+  randRed = rand() % 245;
+  randGreen = rand() % 245;
+  randBlue = rand() % 245;
+  randPix = rand() % strip.numPixels();
+  
+  red = splitColor(strip.getPixelColor(randPix), 'r');
+  green = splitColor(strip.getPixelColor(randPix), 'g');
+  blue = splitColor(strip.getPixelColor(randPix), 'b');
+  
+  Serial.println(randRed);
+  Serial.println(randGreen);
+  Serial.println(randBlue);
+  Serial.println();
+  red = randRed;
+  green = randGreen;
+  blue = randBlue;
+  
+  for(int a = 0; a < strip.numPixels(); a++) {
+    strip.setPixelColor(randPix,strip.Color(red, green, blue));
+  }
+  strip.show();
+  delay(500);
 }
 
 uint8_t splitColor ( uint32_t c, char value )
