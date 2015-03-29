@@ -7,6 +7,10 @@ int red = 245;
 int green = 245;
 int blue = 60;
 int randRed, randGreen, randBlue, randPix;
+int colorVals[11][3];
+int pos=0;
+int pos1=0;
+int incNum = 1;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -81,16 +85,23 @@ void powerOn(int r, int g, int b, int wait) {
       int green_ = percentage * g;
       int blue_ = percentage * b;
       //strip.setPixelColor(a, strip.Color(red,green,blue));
+      if(a <=11) {
+        colorVals[pos][0] = red_;
+        colorVals[pos][1] = green_;
+        colorVals[pos][2] = blue_;
+      }
+      else {
+        strip.setPixelColor(((strip.numPixels() - 1) - a - 11), strip.Color((colorVals[pos1][0] + incNum), (colorVals[pos1][1] + incNum), (colorVals[pos1][2] + incNum)));
+      }
       strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red_,green_,blue_));
       strip.show();
       delay(5);
     }
+    pos++;
+    pos1++;
  //   delay(wait);
   }
-  Serial.println((int)(.8*245));
-  Serial.println((int)(.8*245));
-  Serial.println((int)(.8*60));
-  Serial.println(splitColor(strip.getPixelColor(15), 'b'));
+  /*
   for(int k = 0; k < strip.numPixels(); k++) {
     for(int g = 10; g <= 100; g+=30) {
       double percentage = (double)g/100;
@@ -98,11 +109,6 @@ void powerOn(int r, int g, int b, int wait) {
       int red_ = percentage * red;
       int green_ = percentage * green;
       int blue_ = percentage * blue;
-      Serial.println(red_);
-      Serial.println(green_);
-      Serial.println(blue_);
-      Serial.println("-----------------------------------------------------");
-      Serial.println();
     //  delay(1000);
       strip.setPixelColor(((strip.numPixels()-1) - k), strip.Color(red_,green_,blue_));
       strip.show();
@@ -110,6 +116,7 @@ void powerOn(int r, int g, int b, int wait) {
     }
     //delay(wait);
   }
+  */
 }
 
 void powerOff() {
