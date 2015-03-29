@@ -15,7 +15,7 @@ int randRed, randGreen, randBlue, randPix;
 //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(23, PIN, NEO_GRB + NEO_KHZ800);
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
@@ -29,11 +29,13 @@ void setup() {
 #endif
   // End of trinket special code
   Serial.begin(9600);
+//  Serial.println(strip.numPixels());
   setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   powerOn(red, green, blue, 1);
-  delay(1000);
+  //strip.setPixelColor(15, strip.Color(196, 196, 48));
+ // delay(1000);
  // powerOff();
 }
 /*
@@ -50,11 +52,6 @@ void loop() {
   red = splitColor(strip.getPixelColor(randPix), 'r');
   green = splitColor(strip.getPixelColor(randPix), 'g');
   blue = splitColor(strip.getPixelColor(randPix), 'b');
-  
-  Serial.println(randRed);
-  Serial.println(randGreen);
-  Serial.println(randBlue);
-  Serial.println();
   red = randRed;
   green = randGreen;
   blue = randBlue;
@@ -77,19 +74,41 @@ uint8_t splitColor ( uint32_t c, char value )
 }
 
 void powerOn(int r, int g, int b, int wait) {
-  for(int a = 0; a < strip.numPixels()/2; a++) {
-    for(int i = 1; i <= 100; i+=10) {
+  for(int a = 0; a < strip.numPixels(); a++) {
+    for(int i = 0; i <= 9; i++) {
       double percentage = (double)i/100;
-      red = percentage * r;
-      green = percentage * g;
-      blue = percentage * b;
-      Serial.println(percentage);
-      strip.setPixelColor(a, strip.Color(red,green,blue));
-      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red,green,blue));
+      int red_ = percentage * r;
+      int green_ = percentage * g;
+      int blue_ = percentage * b;
+      //strip.setPixelColor(a, strip.Color(red,green,blue));
+      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red_,green_,blue_));
       strip.show();
-      delay(1);
+      delay(5);
     }
-    delay(wait);
+ //   delay(wait);
+  }
+  Serial.println((int)(.8*245));
+  Serial.println((int)(.8*245));
+  Serial.println((int)(.8*60));
+  Serial.println(splitColor(strip.getPixelColor(15), 'b'));
+  for(int k = 0; k < strip.numPixels(); k++) {
+    for(int g = 10; g <= 100; g+=30) {
+      double percentage = (double)g/100;
+     // Serial.println(percentage);
+      int red_ = percentage * red;
+      int green_ = percentage * green;
+      int blue_ = percentage * blue;
+      Serial.println(red_);
+      Serial.println(green_);
+      Serial.println(blue_);
+      Serial.println("-----------------------------------------------------");
+      Serial.println();
+    //  delay(1000);
+      strip.setPixelColor(((strip.numPixels()-1) - k), strip.Color(red_,green_,blue_));
+      strip.show();
+     // delay(5);
+    }
+    //delay(wait);
   }
 }
 
@@ -98,7 +117,7 @@ void powerOff() {
     for(double k = 100; k >= 0; k--) {
       double percentage = k/100.0;
       uint32_t colorVal = strip.getPixelColor(a);
-      Serial.println(colorVal);
+  //    Serial.println(colorVal);
       double r = splitColor(colorVal, 'r');
       double g = splitColor(colorVal, 'g');
       double b = splitColor(colorVal, 'b');
