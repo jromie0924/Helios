@@ -7,10 +7,6 @@ int red = 245;
 int green = 245;
 int blue = 60;
 int randRed, randGreen, randBlue, randPix;
-int colorVals[11][3];
-int pos=0;
-int pos1=0;
-int incNum = 1;
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -78,27 +74,17 @@ uint8_t splitColor ( uint32_t c, char value )
 }
 
 void powerOn(int r, int g, int b, int wait) {
-  for(int a = 0; a < strip.numPixels(); a++) {
-    for(int i = 0; i <= 9; i++) {
+  for(int a = 0; a <= strip.numPixels()/2; a++) {
+    for(int i = 0; i <= 100; i+=5) {
       double percentage = (double)i/100;
       int red_ = percentage * r;
       int green_ = percentage * g;
       int blue_ = percentage * b;
-      //strip.setPixelColor(a, strip.Color(red,green,blue));
-      if(a <=11) {
-        colorVals[pos][0] = red_;
-        colorVals[pos][1] = green_;
-        colorVals[pos][2] = blue_;
-      }
-      else {
-        strip.setPixelColor(((strip.numPixels() - 1) - a - 11), strip.Color((colorVals[pos1][0] + incNum), (colorVals[pos1][1] + incNum), (colorVals[pos1][2] + incNum)));
-      }
+      strip.setPixelColor(a, strip.Color(red,green,blue));
       strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red_,green_,blue_));
       strip.show();
       delay(5);
     }
-    pos++;
-    pos1++;
  //   delay(wait);
   }
   /*
