@@ -5,7 +5,7 @@
 #define PIN 6
 int red = 245;
 int green = 245;
-int blue = 0;
+int blue = 60;
 int randRed, randGreen, randBlue, randPix;
 
 // Parameter 1 = number of pixels in strip
@@ -32,7 +32,7 @@ void setup() {
   setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  //powerOn(red, green, blue, 5);
+  powerOn(red, green, blue, 1);
   delay(1000);
  // powerOff();
 }
@@ -60,7 +60,7 @@ void loop() {
   blue = randBlue;
   
   for(int a = 0; a < strip.numPixels(); a++) {
-    strip.setPixelColor(randPix,strip.Color(red, green, blue));
+   // strip.setPixelColor(randPix,strip.Color(red, green, blue));
   }
   strip.show();
   delay(500);
@@ -78,19 +78,16 @@ uint8_t splitColor ( uint32_t c, char value )
 
 void powerOn(int r, int g, int b, int wait) {
   for(int a = 0; a < strip.numPixels()/2; a++) {
-    for(int i = 1; i <= 100; i++) {
+    for(int i = 1; i <= 100; i+=10) {
       double percentage = (double)i/100;
-      int red = percentage * r;
-      int green = percentage * g;
-      int blue = percentage * b;
-    //  Serial.println(red);
-    //  Serial.println(green);
-    //  Serial.println(blue);
+      red = percentage * r;
+      green = percentage * g;
+      blue = percentage * b;
       Serial.println(percentage);
       strip.setPixelColor(a, strip.Color(red,green,blue));
       strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red,green,blue));
       strip.show();
-     // delay(1);
+      delay(1);
     }
     delay(wait);
   }
