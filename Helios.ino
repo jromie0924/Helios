@@ -77,11 +77,11 @@ void powerOn(int r, int g, int b, int wait) {
   for(int a = 0; a <= strip.numPixels()/2; a++) {
     for(int i = 0; i <= 100; i+=5) {
       double percentage = (double)i/100;
-      int red_ = percentage * r;
-      int green_ = percentage * g;
-      int blue_ = percentage * b;
+      red = percentage * r;
+      green = percentage * g;
+      blue = percentage * b;
       strip.setPixelColor(a, strip.Color(red,green,blue));
-      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red_,green_,blue_));
+      strip.setPixelColor(((strip.numPixels() - 1) - a), strip.Color(red,green,blue));
       strip.show();
       delay(5);
     }
