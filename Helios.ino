@@ -5,7 +5,8 @@
 #define PIN 6
 int day1 [3] = {209, 100, 39}; //jstart
 int day2 [3] = {220, 0, 0}; //end
-int currentColor[3] = {day1[0], day1[1], day1[2]};
+//int currentColor[3] = {day1[0], day1[1], day1[2]};
+int currentColors [45][3];
 
 /*
 int red = 200;
@@ -34,12 +35,16 @@ void setup() {
 #endif
   // End of trinket special code
   Serial.begin(9600);
+  initializePixels();
+  Serial.println(sizeof(currentColors[6]));
 //  Serial.println(strip.numPixels());
   setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   powerOn(day1[0], day1[1], day1[2], 10);
-  delay(7000);
+  delay(1000);
+  srand(now());
+  delay(10);
   //strip.setPixelColor(15, strip.Color(196, 196, 48));
  // delay(1000);
  // powerOff();
@@ -49,36 +54,20 @@ void setup() {
  * use for random pixel "liveliness"
  */ 
 void loop() {
-  srand(now());
+  //srand(now());
   int randColor = rand() % 3 + 1;
   int randPix = rand() % strip.numPixels();
-  Serial.println("here");
-  switch(randColor) {
-    case 1:
-      Serial.println(randPix);
-      Serial.println("day1");
-      Serial.println();
-      if(!(currentColor[0] == day1[0] && currentColor[1] == day1[1] && currentColor[2] == day1[2])) {
-        fadeToColor(currentColor, day1, randPix);
-        currentColor[0] = day1[0];
-        currentColor[1] = day1[1];
-        currentColor[2] = day1[2];
-      }
-      break;
-      
-    case 2:
-      if(!(currentColor == day2)){
-        fadeToColor(currentColor, day2, randPix);
-      }
-      break;
-      
-    default:
-      Serial.println("default");
-      Serial.println();
-      break;
+  //Serial.println(randColor);
+  if(randColor == 1) {
+  //  if(!(currentColors[randPix][0] == day2[0] && currentColors[randPix][1] == day2[1] && currentColors[randPix][2] == day2[2])) {
+    //  Serial.print("Changing color on pixel ");
+   //  Serial.println(randPix);
+      fadeToColor(currentColors[randPix], day2, randPix);
+      for(int i = 0; i < sizeof(currentColors[randPix]); i++)
+        currentColors[randPix][i] = day1[i];
+    //}
   }
-  //fadeToColor(day2[0], day2[1], day2[2]);
-  delay(500);
+  delay(2000);
 }
 
 uint8_t splitColor ( uint32_t c, char value )
@@ -97,8 +86,8 @@ void fadeToColor(int start[], int end_[], int pix) {
   int rnew = 0, gnew = 0, bnew = 0;
   for(int i = 0; i <= n; i++) {
     rnew = start[0] + (end_[0] - start[0]) * i / n;
-    rnew = start[1] + (end_[1] - start[1]) * i / n;
-    rnew = start[2] + (end_[2] - start[2]) * i / n;
+    gnew = start[1] + (end_[1] - start[1]) * i / n;
+    bnew = start[2] + (end_[2] - start[2]) * i / n;
     strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
     strip.show();
     delay(100);
@@ -178,32 +167,20 @@ void powerOff() {
   }
 }
 
-// Fill the dots one after the other with a color
-void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, c);
-      strip.show();
-      delay(wait);
-  }
-}
-
-
-// Slightly different, this makes the rainbow equally distributed throughout
-void rainbowCycle(uint8_t wait) {
-  uint16_t i, j;
-
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+void initializePixels() {
+  Serial.println(sizeof(currentColors));
+  Serial.println();
+  for(int a = 0; a < 45; a++) {
+    for(int k = 0; k < 3; k++) {
+      currentColors[a][k] = day1[k];
+     // delay(500);
     }
-    strip.show();
-    delay(wait);
   }
 }
-
 
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
+/*
 uint32_t Wheel(byte WheelPos) {
   WheelPos = 255 - WheelPos;
   if(WheelPos < 85) {
@@ -216,4 +193,4 @@ uint32_t Wheel(byte WheelPos) {
    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
   }
 }
-
+*/
