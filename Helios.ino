@@ -41,7 +41,13 @@ void setup() {
   setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+ /* for(int a=0; a<strip.numPixels(); a++){
+    strip.setPixelColor(a, strip.Color(day1[0],day1[1],day1[2]));
+  }*/
+  strip.show();
   powerOn(day1[0], day1[1], day1[2], 10);
+  //fadeToColor(day1, col2, 8);
+  
   delay(1000);
   srand(now());
   delay(10);
@@ -62,7 +68,7 @@ void loop() {
   //  if(!(currentColors[randPix][0] == day2[0] && currentColors[randPix][1] == day2[1] && currentColors[randPix][2] == day2[2])) {
     //  Serial.print("Changing color on pixel ");
    //  Serial.println(randPix);
-      fadeToColor(currentColors[randPix], day2, randPix);
+    //  fadeToColor(currentColors[randPix], day2, randPix);
       for(int i = 0; i < sizeof(currentColors[randPix]); i++)
         currentColors[randPix][i] = day1[i];
     //}
@@ -88,9 +94,11 @@ void fadeToColor(int start[], int end_[], int pix) {
     rnew = start[0] + (end_[0] - start[0]) * i / n;
     gnew = start[1] + (end_[1] - start[1]) * i / n;
     bnew = start[2] + (end_[2] - start[2]) * i / n;
-    strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
+    for(int a = 0; a < strip.numPixels(); a++) {
+      strip.setPixelColor(a, strip.Color(rnew, gnew, bnew));
+    }
     strip.show();
-    delay(100);
+    delay(20);
   }
 }
 
