@@ -1,4 +1,5 @@
 #include "Randomizer.h"
+#include "Arduino.h"
 #include <Time.h>
 
 Randomizer::Randomizer() {
@@ -27,7 +28,43 @@ Randomizer::Randomizer() {
   srand(now());
 }
 
-void Randomizer::randomizePix(int rCol, int pix) {
+void Randomizer::randomize(int curR, int curG, int curB) {
+  int numPixels = rand() % 3 + 1; //max of 3 pixels can "flare" at a time (min of 1).
+  int *colors = new int[numPixels][3];
+  for(int a = 0; a < numPixels; a++) {
+    int changeOrDim = rand() % 2; // 0 or 1
+    if(changeOrDim == 0) { // Dim and change
+      int randCol = rand() % 5 + 1; // select a color
+      int red, green, blue;
+      switch (randCol) {
+        case 1:
+          red = day1[0]; green = day1[1]; blue = day1[2];
+          break;
+          
+        case 2:
+          red = day2[0]; green = day2[1]; blue = day2[2];
+          break;
+          
+        case 3:
+          red = day3[0]; green = day3[1]; blue = day3[2];
+          break;
+          
+        case 4:
+          red = day4[0]; green = day4[1]; blue = day4[2];
+          break;
+          
+        case 5:
+          red = day5[0]; green = day5[1]; blue = day5[2];
+          break;
+          
+        default:
+          return;
+      }
+    }
+  }
+}
+
+void Randomizer::flarePix(int rCol, int pix) {
   int randColor = rand() % 3 + 1;
   int howManyPixels = rand() % 2 + 1;
   if(howManyPixels == 1) {
@@ -53,6 +90,7 @@ void Randomizer::randomizePix(int rCol, int pix) {
   }
 }
 
-void Randomizer::randomizePix(int rCol, int pix1, int pix2) {
-  
-}
+
+
+
+

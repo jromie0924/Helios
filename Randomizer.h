@@ -1,6 +1,7 @@
 #ifndef RANDOMIZER_H
 #define RANDOMIZER_H
 
+#include "Arduino.h"
 
 //using namespace std;
 
@@ -21,10 +22,14 @@ class Randomizer {
     int ss3 [3];
     int ss4 [3];
     int ss5 [3];
+    
+    void flarePix(int, int); // for one pixel
+    void flarePix(int, int, int); // for two pixels
+    void flarePix(int, int, int, int); // for three pixels
+    
   public:
     Randomizer();
-    void randomizePix(int, int); // for one pixel
-    void randomizePix(int, int, int); // for two pixels
+    void randomize(int, int, int);
 };
 
 #endif
