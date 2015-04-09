@@ -3,10 +3,11 @@
 #include <Time.h>
 
 #define PIN 6
-int day1 [3] = {209, 100, 39}; //jstart
-int day2 [3] = {220, 0, 0}; //end
+
+//int day1 [3] = {209, 100, 39}; //jstart
+//int day2 [3] = {220, 0, 0}; //end
 //int currentColor[3] = {day1[0], day1[1], day1[2]};
-int currentColors [45][3];
+//int currentColors [45][3];
 
 /*
 int red = 200;
@@ -35,8 +36,7 @@ void setup() {
 #endif
   // End of trinket special code
   Serial.begin(9600);
-  initializePixels();
-  Serial.println(sizeof(currentColors[6]));
+  
 //  Serial.println(strip.numPixels());
   setTime(4, 20, 00, 11, 59, 2015);
   strip.begin();
@@ -60,15 +60,8 @@ void setup() {
  * use for random pixel "liveliness"
  */ 
 void loop() {
-  //srand(now());
-  int randColor = rand() % 3 + 1;
-  int randPix = rand() % strip.numPixels();
-  //Serial.println(randColor);
-  delay(2000);
-}
-
-void randomFlare(int rCol, rPix) {
   
+  delay(2000);
 }
 
 uint8_t splitColor ( uint32_t c, char value )
@@ -81,7 +74,7 @@ uint8_t splitColor ( uint32_t c, char value )
   }
 }
 
-void fadeToColor(int start[], int end_[], int pix) {
+void fadeToColor(int *start, int *end_, int pix) {
  // Serial.println("here");
   int n = 100;
   int rnew = 0, gnew = 0, bnew = 0;
@@ -89,9 +82,7 @@ void fadeToColor(int start[], int end_[], int pix) {
     rnew = start[0] + (end_[0] - start[0]) * i / n;
     gnew = start[1] + (end_[1] - start[1]) * i / n;
     bnew = start[2] + (end_[2] - start[2]) * i / n;
-    for(int a = 0; a < strip.numPixels(); a++) {
-      strip.setPixelColor(a, strip.Color(rnew, gnew, bnew));
-    }
+    strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
     strip.show();
     delay(20);
   }
