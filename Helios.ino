@@ -31,29 +31,18 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(45, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-#if defined (__AVR_ATtiny85__)
+/*#if defined (__AVR_ATtiny85__)
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-#endif
+#endif*/
   // End of trinket special code
   Serial.begin(9600);
-  
-//  Serial.println(strip.numPixels());
-  setTime(4, 20, 00, 11, 59, 2015);
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
- /* for(int a=0; a<strip.numPixels(); a++){
-    strip.setPixelColor(a, strip.Color(day1[0],day1[1],day1[2]));
-  }*/
-  strip.show();
+
+  //strip.begin();
+  //strip.show(); // Initialize all pixels to 'off'
   //powerOn(day1[0], day1[1], day1[2], 10);
   //fadeToColor(day1, col2, 8);
   
   delay(1000);
-  srand(now());
-  delay(10);
-  //strip.setPixelColor(15, strip.Color(196, 196, 48));
- // delay(1000);
- // powerOff();
 }
 /*
  * 25 + ( std::rand() % ( 63 - 25 + 1 ) ) --> random number from 25-63
@@ -74,6 +63,7 @@ uint8_t splitColor ( uint32_t c, char value )
   }
 }
 
+/*
 void fadeToColor(int *start, int *end_, int pix) {
  // Serial.println("here");
   int n = 100;
@@ -86,7 +76,7 @@ void fadeToColor(int *start, int *end_, int pix) {
     strip.show();
     delay(20);
   }
-}
+}*/
 
 void powerOn(int r, int g, int b, int wait) {
   //red = r;

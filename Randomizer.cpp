@@ -1,10 +1,13 @@
+#include <Adafruit_NeoPixel.h>
 #include "Randomizer.h"
 #include "Arduino.h"
 #include <Time.h>
 
-Randomizer::Randomizer() {
-  
+Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
+  PIN = 6;
   dimPerc = 0.5;
+  strip.begin();
+  strip.show(); // clear the strip (set all pixels to 'off')
   
   // Instantiate all arrays.
   // Daylight
@@ -37,9 +40,9 @@ Randomizer::Randomizer() {
   srand(now());
 }
 
-void Randomizer::randomize(int curR, int curG, int curB) {
+void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& strip) {
   int numPixels = rand() % 3 + 1; //max of 3 pixels can "flare" at a time (min of 1).
-  int *colors = new int[numPixels][3];
+  int colors [numPixels][3];
   for(int a = 0; a < numPixels; a++) {
     int changeOrDim = rand() % 2; // 0 or 1
     if(changeOrDim == 0) { // Dim and change
@@ -74,7 +77,7 @@ void Randomizer::randomize(int curR, int curG, int curB) {
   }
 }
 
-void Randomizer::flarePix(int rCol[3], int pix) {
+void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {
   int randColor = rand() % 3 + 1;
   int howManyPixels = rand() % 2 + 1;
   if(howManyPixels == 1) {
@@ -95,12 +98,33 @@ void Randomizer::flarePix(int rCol[3], int pix) {
       nextCol[0] = r;
       nextCol[1] = g;
       nextCol[2] = b;
-      fadeToColor(col, nextCol, pix);
+      fadeToColor(col, nextCol, pix, strip);
     }
   }
 }
 
+uint8_t Randomizer::splitColor( uint32_t c, char value )
+{
+  switch ( value ) {
+    case 'r': return (uint8_t)(c >> 16);
+    case 'g': return (uint8_t)(c >>  8);
+    case 'b': return (uint8_t)(c >>  0);
+    default:  return 0;
+  }
+}
 
+void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixel& strip) {
+  int n = 100;
+  int rnew = 0, gnew = 0, bnew = 0;
+  for(int i = 0; i <= n; i++) {
+    rnew = start[0] + (end_[0] - start[0]) * i / n;
+    gnew = start[1] + (end_[1] - start[1]) * i / n;
+    bnew = start[2] + (end_[2] - start[2]) * i / n;
+    strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
+    strip.show();
+    delay(20);
+  }
+}
 
 
 
