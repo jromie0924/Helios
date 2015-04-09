@@ -45,7 +45,7 @@ void setup() {
     strip.setPixelColor(a, strip.Color(day1[0],day1[1],day1[2]));
   }*/
   strip.show();
-  powerOn(day1[0], day1[1], day1[2], 10);
+  //powerOn(day1[0], day1[1], day1[2], 10);
   //fadeToColor(day1, col2, 8);
   
   delay(1000);
@@ -158,17 +158,6 @@ void powerOff() {
       strip.show();
     }
     delay(1);
-  }
-}
-
-void initializePixels() {
-  Serial.println(sizeof(currentColors));
-  Serial.println();
-  for(int a = 0; a < 45; a++) {
-    for(int k = 0; k < 3; k++) {
-      currentColors[a][k] = day1[k];
-     // delay(500);
-    }
   }
 }
 
