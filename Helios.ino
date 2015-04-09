@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+#include "Randomizer.h"
 #include <avr/power.h>
 #include <Time.h>
 
@@ -35,12 +36,15 @@ void setup() {
   if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
 #endif*/
   // End of trinket special code
+  
   Serial.begin(9600);
 
   //strip.begin();
   //strip.show(); // Initialize all pixels to 'off'
   //powerOn(day1[0], day1[1], day1[2], 10);
   //fadeToColor(day1, col2, 8);
+  Randomizer rand(strip);
+  rand.powerOn(strip, 10);
   
   delay(1000);
 }
@@ -78,23 +82,20 @@ void fadeToColor(int *start, int *end_, int pix) {
   }
 }*/
 
-void powerOn(int r, int g, int b, int wait) {
-  //red = r;
-  //green = g;
-  //blue = b;
-  for(int a = 0; a <= 100; a++) {
-    double percentage = (double)a/100;
-    int red_ = percentage * r;
-    int green_ = percentage * g;
-    int blue_ = percentage * b;
-    
-    for(int i=0; i<=strip.numPixels(); i++) {
-      strip.setPixelColor(i, strip.Color(red_, green_, blue_));
-    }
-    strip.show();
-    delay(wait);
-  }
-}
+//void powerOn(int r, int g, int b, int wait) {
+//  for(int a = 0; a <= 100; a++) {
+//    double percentage = (double)a/100;
+//    int red_ = percentage * r;
+//    int green_ = percentage * g;
+//    int blue_ = percentage * b;
+//    
+//    for(int i=0; i<=strip.numPixels(); i++) {
+//      strip.setPixelColor(i, strip.Color(red_, green_, blue_));
+//    }
+//    strip.show();
+//    delay(wait);
+//  }
+//}
 /*
 void powerOn(int r, int g, int b, int wait) {
   for(int a = 0; a <= strip.numPixels()/2; a++) {

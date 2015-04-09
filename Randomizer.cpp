@@ -41,6 +41,24 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   srand(now());
 }
 
+void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
+  int r = dayP[0],
+    g = dayP[1],
+    b = dayP[2];
+  for(int a = 0; a <= 100; a++) {
+    double percentage = (double)a/100;
+    int red_ = percentage * r;
+    int green_ = percentage * g;
+    int blue_ = percentage * b;
+    
+    for(int i=0; i<=strip.numPixels(); i++) {
+      strip.setPixelColor(i, strip.Color(red_, green_, blue_));
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
 void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& strip) {
   int numPixels = rand() % 3 + 1; // max of 3 pixels can "flare" at a time (min of 1).
   int colors [numPixels][3];
