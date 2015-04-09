@@ -8,18 +8,17 @@
 
 class Randomizer {
   private:
-    uint8_t PIN;
     double dimPerc;
     
     //Adafruit_NeoPixel strip;
     
     // Daylight Colors
     //Dynamically-allocated Arrays
+    int dayP [3];
     int day1 [3];
     int day2 [3];
     int day3 [3];
     int day4 [3];
-    int day5 [3];
     
     // Sunset Colors
     // Dynamically-allocated Arrays
