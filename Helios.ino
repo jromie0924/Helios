@@ -64,16 +64,11 @@ void loop() {
   int randColor = rand() % 3 + 1;
   int randPix = rand() % strip.numPixels();
   //Serial.println(randColor);
-  if(randColor == 1) {
-  //  if(!(currentColors[randPix][0] == day2[0] && currentColors[randPix][1] == day2[1] && currentColors[randPix][2] == day2[2])) {
-    //  Serial.print("Changing color on pixel ");
-   //  Serial.println(randPix);
-    //  fadeToColor(currentColors[randPix], day2, randPix);
-      for(int i = 0; i < sizeof(currentColors[randPix]); i++)
-        currentColors[randPix][i] = day1[i];
-    //}
-  }
   delay(2000);
+}
+
+void randomFlare(int rCol, rPix) {
+  
 }
 
 uint8_t splitColor ( uint32_t c, char value )
