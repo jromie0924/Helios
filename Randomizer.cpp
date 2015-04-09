@@ -3,15 +3,24 @@
 #include <Time.h>
 
 Randomizer::Randomizer() {
+  
+  dimPerc = 0.5;
+  
   // Instantiate all arrays.
   // Daylight
-  day1 = {209, 100, 39};
-  day2 = {220, 97, 34};
-  day3 = {250, 120, 34};
-  day4 = {250, 150, 34};
-  day5 = {250, 115, 30};
+  day1[0] = 209; day1[1] = 100; day1[2] = 39;
+  day2[0] = 220; day2[1] = 97; day2[2] = 34;
+  day3[0] = 250; day3[1] = 120; day3[2] = 34;
+  day4[0] = 250; day4[1] = 150; day4[2] = 34;
+  day5[0] = 250; day5[1] = 115; day5[2] = 30;
+  //day1 = {209, 100, 39};
+  //day2 = {220, 97, 34};
+  //day3 = {250, 120, 34};
+  //day4 = {250, 150, 34};
+  //day5 = {250, 115, 30};
   
   // Sunset
+  /*
   ss1 = {245, 90, 20};
   ss2 = {245, 60, 20};
   ss3 = {245, 55, 15};
@@ -19,7 +28,7 @@ Randomizer::Randomizer() {
   // Neither are to be used as a "main" color.
   ss4 = {200, 40, 5};
   ss5 = {245, 25, 5};
-  
+  */
   // Set the time for the random seed.
   // Any time will do.
   setTime(9, 24, 00, 11, 59, 2015);
@@ -38,33 +47,34 @@ void Randomizer::randomize(int curR, int curG, int curB) {
       int red, green, blue;
       switch (randCol) {
         case 1:
-          red = day1[0]; green = day1[1]; blue = day1[2];
+          red = (int)(dimPerc * day1[0]); green = (int)(dimPerc * day1[1]); blue = (int)(dimPerc * day1[2]);
           break;
           
         case 2:
-          red = day2[0]; green = day2[1]; blue = day2[2];
+          red = (int)(dimPerc * day2[0]); green = (int)(dimPerc * day2[1]); blue = (int)(dimPerc * day2[2]);
           break;
           
         case 3:
-          red = day3[0]; green = day3[1]; blue = day3[2];
+          red = (int)(dimPerc * day3[0]); green = (int)(dimPerc * day3[1]); blue = (int)(dimPerc * day3[2]);
           break;
           
         case 4:
-          red = day4[0]; green = day4[1]; blue = day4[2];
+          red = (int)(dimPerc * day4[0]); green = (int)(dimPerc * day4[1]); blue = (int)(dimPerc * day4[2]);
           break;
           
         case 5:
-          red = day5[0]; green = day5[1]; blue = day5[2];
+          red = (int)(dimPerc * day5[0]); green = (int)(dimPerc * day5[1]); blue = (int)(dimPerc * day5[2]);
           break;
           
         default:
           return;
       }
+      // call flarePix() with the color we just determined.
     }
   }
 }
 
-void Randomizer::flarePix(int rCol, int pix) {
+void Randomizer::flarePix(int rCol[3], int pix) {
   int randColor = rand() % 3 + 1;
   int howManyPixels = rand() % 2 + 1;
   if(howManyPixels == 1) {
