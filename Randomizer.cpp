@@ -44,6 +44,7 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& strip) {
   int numPixels = rand() % 3 + 1; // max of 3 pixels can "flare" at a time (min of 1).
   int colors [numPixels][3];
+  int pixels [numPixels];
   for (int a = 0; a < numPixels; a++) {
     int changeOrDim = rand() % 2; // 0 or 1
     double dimmer = 1;
@@ -51,7 +52,7 @@ void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& stri
       dimmer = dimPerc;
     }
     
-    int randCol = rand() % 4 + 1; // select a color
+    int randCol = rand() % 4 + 1; // select a color [1, 4]
     int red, green, blue;
     switch (randCol) {
       case 1:
@@ -73,11 +74,34 @@ void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& stri
       default:
         return;
     }
+    colors[a][0] = red; colors[a][1] = green; colors[a][2] = blue;
     // call flarePix() with the color we just determined.
+  }
+  bool isDistinct = false;
+  while(!isDistinct) {
+    isDistinct = true;
+    for(int i = 0; i < numPixels; i++) {
+      pixels[i] = rand() % 45 + 1;
+    }
+    for(int i = 0; i < numPixels; i++) {
+      for(int k = numPixels - 1; k > i; k--) {
+        if(pixels[i] == pixels[k])
+          isDistinct = false;
+      }
+    }
+  }
+  for(int a = 0; a < numPixels; a++) {
+    fadeToColor(dayP, colors[a], pixels[a], strip);
+    delay(10);
+  }
+  delay(10);
+  for(int a = 0; a < numPixels; a++) {
+    fadeToColor(colors[a], dayP, pixels[a], strip);
+    delay(10);
   }
 }
 
-void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {
+void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {/*
   int randColor = rand() % 3 + 1;
   int howManyPixels = rand() % 2 + 1;
   if (howManyPixels == 1) {
@@ -100,7 +124,7 @@ void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {
       nextCol[2] = b;
       fadeToColor(col, nextCol, pix, strip);
     }
-  }
+  }*/
 }
 
 uint8_t Randomizer::splitColor( uint32_t c, char value )
