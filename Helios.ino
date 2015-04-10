@@ -39,7 +39,7 @@ void setup() {
   //Randomizer rand_(strip);
   //randomizer.powerOn(strip, 10);
   randomizer = new Randomizer(strip);
-  randomizer->powerOn(strip, 5);  
+  randomizer->powerOn(strip, 30);  
   delay(1000);
 }
 
@@ -47,7 +47,7 @@ void setup() {
 
 void loop() {
   randomizer->randomize(strip);
-  delay(2000);
+  delay(500);
 }
 
 uint8_t splitColor ( uint32_t c, char value )

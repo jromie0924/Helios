@@ -12,11 +12,11 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 
   // Instantiate all arrays.
   // Daylight
-  dayP[0] = (int)(dimPerc * 245); dayP[1] = (int)(dimPerc * 90); dayP[2] = (int)(dimPerc * 20); // This is the primary day color. The preceding colors are for random selection.
-  day1[0] = 245; day1[1] = 60; day1[2] = 20;
-  day2[0] = 245; day2[1] = 55; day2[2] = 15;
-  day3[0] = 200; day3[1] = 40; day3[2] = 5;
-  day4[0] = 245; day4[1] = 25; day4[2] = 5;
+  dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39); // This is the primary day color. The preceding colors are for random selection.
+  day1[0] = 220; day1[1] = 97; day1[2] = 34;
+  day2[0] = 250; day2[1] = 120; day2[2] = 34;
+  day3[0] = 250; day3[1] = 150; day3[2] = 34;
+  day4[0] = 250; day4[1] = 115; day4[2] = 30;
   //day1 = {209, 100, 39};
   //day2 = {220, 97, 34};
   //day3 = {250, 120, 34};
@@ -42,9 +42,9 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 }
 
 void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
-  int r = 245,//dayP[0],
-      g = 90,//dayP[1],
-      b = 20;//dayP[2];
+  int r = 209,//dayP[0],
+      g = 100,//dayP[1],
+      b = 39;//dayP[2];
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
@@ -70,13 +70,13 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
       strip.setPixelColor(n, strip.Color(rnew, gnew, bnew));
       strip.show();
     }
-    delay(10);
+    delay(30);
   }
 
 }
 
 void Randomizer::randomize(Adafruit_NeoPixel& strip) {
-  int numPixels = random(10) + 11; // max of 20 pixels can "flare" at a time (min of 10).
+  int numPixels = random(15) + 11; // max of 20 pixels can "flare" at a time (min of 10).
   int colors [numPixels][3];
   int pixels [numPixels];
   for (int a = 0; a < numPixels; a++) {
@@ -182,7 +182,7 @@ uint8_t Randomizer::splitColor( uint32_t c, char value )
 }
 
 void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixel& strip) {
-  int n = 100;
+  int n = 70;
   int rnew = 0, gnew = 0, bnew = 0;
   for (int i = 0; i <= n; i++) {
     rnew = start[0] + (end_[0] - start[0]) * i / n;
