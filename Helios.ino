@@ -39,7 +39,7 @@ void setup() {
   //Randomizer rand_(strip);
   //randomizer.powerOn(strip, 10);
   randomizer = new Randomizer(strip);
-  randomizer->powerOn(strip, 10);  
+  randomizer->powerOn(strip, 5);  
   delay(1000);
 }
 

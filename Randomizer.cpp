@@ -1,22 +1,22 @@
 #include <Adafruit_NeoPixel.h>
 #include "Randomizer.h"
 #include "Arduino.h"
-#include <Time.h>
+//#include <Time.h>
 
 Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   // Change to the appropriate percentage of the original brightness of pixels.
   // This is the value that determines how dim the pixels get dimmed when/if they are selected for such functionality.
-  dimPerc = 0.5;
+  dimPerc = 0.4;
   strip.begin();
   strip.show(); // clear the strip (set all pixels to 'off')
 
   // Instantiate all arrays.
   // Daylight
-  dayP[0] = 209; dayP[1] = 100; dayP[2] = 39; // This is the primary day color. The preceding colors are for random selection.
-  day1[0] = 220; day1[1] = 97; day1[2] = 34;
-  day2[0] = 250; day2[1] = 120; day2[2] = 34;
-  day3[0] = 250; day3[1] = 150; day3[2] = 34;
-  day4[0] = 250; day4[1] = 115; day4[2] = 30;
+  dayP[0] = (int)(dimPerc * 245); dayP[1] = (int)(dimPerc * 90); dayP[2] = (int)(dimPerc * 20); // This is the primary day color. The preceding colors are for random selection.
+  day1[0] = 245; day1[1] = 60; day1[2] = 20;
+  day2[0] = 245; day2[1] = 55; day2[2] = 15;
+  day3[0] = 200; day3[1] = 40; day3[2] = 5;
+  day4[0] = 245; day4[1] = 25; day4[2] = 5;
   //day1 = {209, 100, 39};
   //day2 = {220, 97, 34};
   //day3 = {250, 120, 34};
@@ -35,41 +35,57 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   */
   // Set the time for the random seed.
   // Any time will do.
-  setTime(9, 24, 00, 11, 59, 2015);
+  //setTime(9, 24, 00, 11, 59, 2015);
 
   // Set the random seed.
-  srand(now());
+  randomSeed(analogRead(0));
 }
 
 void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
-  int r = dayP[0],
-    g = dayP[1],
-    b = dayP[2];
-  for(int a = 0; a <= 100; a++) {
-    double percentage = (double)a/100;
+  int r = 245,//dayP[0],
+      g = 90,//dayP[1],
+      b = 20;//dayP[2];
+  int lim = 100;
+  int rnew, gnew, bnew;
+  for (int a = 0; a <= 100; a++) {
+    double percentage = (double)a / 100;
     int red_ = percentage * r;
     int green_ = percentage * g;
     int blue_ = percentage * b;
-    
-    for(int i=0; i<=strip.numPixels(); i++) {
+
+    for (int i = 0; i <= strip.numPixels(); i++) {
       strip.setPixelColor(i, strip.Color(red_, green_, blue_));
     }
     strip.show();
     delay(wait);
   }
+  
+  delay(500);
+  
+  for (int i = 0; i <= lim; i++) {
+    rnew = r + (dayP[0] - r) * i / lim;
+    gnew = g + (dayP[1] - g) * i / lim;
+    bnew = b + (dayP[2] - b) * i / lim;
+    for (int n = 0; n < strip.numPixels(); n++) {
+      strip.setPixelColor(n, strip.Color(rnew, gnew, bnew));
+      strip.show();
+    }
+    delay(10);
+  }
+
 }
 
 void Randomizer::randomize(Adafruit_NeoPixel& strip) {
-  int numPixels = rand() % 3 + 1; // max of 3 pixels can "flare" at a time (min of 1).
+  int numPixels = random(10) + 11; // max of 20 pixels can "flare" at a time (min of 10).
   int colors [numPixels][3];
   int pixels [numPixels];
   for (int a = 0; a < numPixels; a++) {
-    int changeOrDim = rand() % 2; // 0 or 1
+    int changeOrDim = random(2); // 0 or 1
     double dimmer = 1;
-    if(changeOrDim == 1) {
-      dimmer = dimPerc;
+    if (changeOrDim == 1) {
+      //dimmer = dimPerc;
     }
-    
+
     int randCol = rand() % 4 + 1; // select a color [1, 4]
     int red, green, blue;
     switch (randCol) {
@@ -96,53 +112,63 @@ void Randomizer::randomize(Adafruit_NeoPixel& strip) {
     // call flarePix() with the color we just determined.
   }
   bool isDistinct = false;
-  while(!isDistinct) {
+  while (!isDistinct) {
     isDistinct = true;
-    for(int i = 0; i < numPixels; i++) {
-      pixels[i] = rand() % 45 + 1;
+    for (int i = 0; i < numPixels; i++) {
+      pixels[i] = random(45) + 1;
     }
-    for(int i = 0; i < numPixels; i++) {
-      for(int k = numPixels - 1; k > i; k--) {
-        if(pixels[i] == pixels[k])
+    for (int i = 0; i < numPixels; i++) {
+      for (int k = numPixels - 1; k > i; k--) {
+        if (pixels[i] == pixels[k])
           isDistinct = false;
       }
     }
+  }/*
+  for (int n = 0; n < numPixels; n++) {
+    strip.setPixelColor(pixels[n], strip.Color(colors[n][0], colors[n][1], colors[n][2]));
+    strip.show();
   }
-  for(int a = 0; a < numPixels; a++) {
+  delay(500);
+  for(int n = 0; n < numPixels; n++) {
+    strip.setPixelColor(pixels[n], strip.Color(dayP[0], dayP[1], dayP[2]));
+  }*/
+
+  for (int a = 0; a < numPixels; a++) {
     fadeToColor(dayP, colors[a], pixels[a], strip);
-    delay(10);
+    delay(100);
   }
   delay(10);
-  for(int a = 0; a < numPixels; a++) {
+  for (int a = 0; a < numPixels; a++) {
     fadeToColor(colors[a], dayP, pixels[a], strip);
-    delay(10);
+    delay(100);
   }
 }
 
-void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {/*
-  int randColor = rand() % 3 + 1;
-  int howManyPixels = rand() % 2 + 1;
-  if (howManyPixels == 1) {
-    int pix = rand() % strip.numPixels();
+void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {
+  /*
     int randColor = rand() % 3 + 1;
-    int *col = new int[3];
-    switch (randColor) {
-      case 1:
-        col[0] = day1[0];
-        col[1] = day1[1];
-        col[2] = day1[2];
-    }
-    int r = splitColor(strip.getPixelColor(pix), 'r');
-    int g = splitColor(strip.getPixelColor(pix), 'g');
-    int b = splitColor(strip.getPixelColor(pix), 'b');
-    if (!(r == col[0] && g == col[1] && b == col[2])) {
-      int *nextCol = new int[3];
-      nextCol[0] = r;
-      nextCol[1] = g;
-      nextCol[2] = b;
-      fadeToColor(col, nextCol, pix, strip);
-    }
-  }*/
+    int howManyPixels = rand() % 2 + 1;
+    if (howManyPixels == 1) {
+      int pix = rand() % strip.numPixels();
+      int randColor = rand() % 3 + 1;
+      int *col = new int[3];
+      switch (randColor) {
+        case 1:
+          col[0] = day1[0];
+          col[1] = day1[1];
+          col[2] = day1[2];
+      }
+      int r = splitColor(strip.getPixelColor(pix), 'r');
+      int g = splitColor(strip.getPixelColor(pix), 'g');
+      int b = splitColor(strip.getPixelColor(pix), 'b');
+      if (!(r == col[0] && g == col[1] && b == col[2])) {
+        int *nextCol = new int[3];
+        nextCol[0] = r;
+        nextCol[1] = g;
+        nextCol[2] = b;
+        fadeToColor(col, nextCol, pix, strip);
+      }
+    }*/
 }
 
 uint8_t Randomizer::splitColor( uint32_t c, char value )
@@ -164,7 +190,7 @@ void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPix
     bnew = start[2] + (end_[2] - start[2]) * i / n;
     strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
     strip.show();
-    delay(20);
+    delay(5);
   }
 }
 
