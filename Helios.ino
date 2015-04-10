@@ -25,35 +25,28 @@ int blue = 5;
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(45, PIN, NEO_GRB + NEO_KHZ800);
 
+// Initialize the randomizer object.
+Randomizer *randomizer;
+
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
 
 void setup() {
-  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-/*#if defined (__AVR_ATtiny85__)
-  if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-#endif*/
-  // End of trinket special code
   
   Serial.begin(9600);
-
-  //strip.begin();
-  //strip.show(); // Initialize all pixels to 'off'
-  //powerOn(day1[0], day1[1], day1[2], 10);
-  //fadeToColor(day1, col2, 8);
-  Randomizer rand(strip);
-  rand.powerOn(strip, 10);
-  
+  //Randomizer rand_(strip);
+  //randomizer.powerOn(strip, 10);
+  randomizer = new Randomizer(strip);
+  randomizer->powerOn(strip, 10);  
   delay(1000);
 }
-/*
- * 25 + ( std::rand() % ( 63 - 25 + 1 ) ) --> random number from 25-63
- * use for random pixel "liveliness"
- */ 
+
+
+
 void loop() {
-  
+  randomizer->randomize(strip);
   delay(2000);
 }
 

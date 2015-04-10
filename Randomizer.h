@@ -36,7 +36,7 @@ class Randomizer {
     
   public:
     Randomizer(Adafruit_NeoPixel&);
-    void randomize(int, int, int, Adafruit_NeoPixel&);
+    void randomize(Adafruit_NeoPixel&);
     void fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&);
     void powerOn(Adafruit_NeoPixel&, int);
 };

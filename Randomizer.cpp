@@ -59,7 +59,7 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
   }
 }
 
-void Randomizer::randomize(int curR, int curG, int curB, Adafruit_NeoPixel& strip) {
+void Randomizer::randomize(Adafruit_NeoPixel& strip) {
   int numPixels = rand() % 3 + 1; // max of 3 pixels can "flare" at a time (min of 1).
   int colors [numPixels][3];
   int pixels [numPixels];
