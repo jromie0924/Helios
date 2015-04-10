@@ -12,11 +12,11 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 
   // Instantiate all arrays.
   // Daylight
-  dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39); // This is the primary day color. The preceding colors are for random selection.
-  day1[0] = 220; day1[1] = 97; day1[2] = 34;
-  day2[0] = 250; day2[1] = 120; day2[2] = 34;
-  day3[0] = 250; day3[1] = 150; day3[2] = 34;
-  day4[0] = 250; day4[1] = 115; day4[2] = 30;
+  dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150); // This is the primary day color. The preceding colors are for random selection.
+  day1[0] = 20; day1[1] = 90; day1[2] = 100;
+  day2[0] = 245; day2[1] = 170; day2[2] = 100;
+  day3[0] = 190; day3[1] = 170; day3[2] = 200;
+  day4[0] = 145; day4[1] = 190; day4[2] = 245;
   //day1 = {209, 100, 39};
   //day2 = {220, 97, 34};
   //day3 = {250, 120, 34};
@@ -42,9 +42,10 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 }
 
 void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
-  int r = 209,//dayP[0],
-      g = 100,//dayP[1],
-      b = 39;//dayP[2];
+  int r = 209,
+      g = 150,
+      b = 150;
+  //int r = dayP[0], g = dayP[1], b = dayP[2];
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
