@@ -25,7 +25,7 @@ int blue = 5;
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(45, PIN, NEO_GRB + NEO_KHZ800);
 
-// Initialize the randomizer object.
+// Initialize the randomizer object. 
 Randomizer *randomizer;
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across

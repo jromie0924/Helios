@@ -27,7 +27,7 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   /*
   ss1 = {245, 90, 20};
   ss2 = {245, 60, 20};
-  ss3 = {245, 55, 15};
+  ss3 = {245, 55, 15}; 
   // These last two are extremely red.
   // Neither are to be used as a "main" color.
   ss4 = {200, 40, 5};
