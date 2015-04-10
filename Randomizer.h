@@ -13,7 +13,7 @@ class Randomizer {
     //Adafruit_NeoPixel strip;
     
     // Daylight Colors
-    //Dynamically-allocated Arrays
+    //Arrays
     int dayP [3];
     int day1 [3];
     int day2 [3];
@@ -21,7 +21,7 @@ class Randomizer {
     int day4 [3];
     
     // Sunset Colors
-    // Dynamically-allocated Arrays
+    // Arrays
     /*
     int ss1 [3];
     int ss2 [3];
