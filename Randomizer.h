@@ -40,8 +40,8 @@ class Randomizer {
     Randomizer(Adafruit_NeoPixel&);
     void randomize(Adafruit_NeoPixel&, IRrecv&, decode_results&);
     void fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&, IRrecv&, decode_results&);
-    void powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
-    void powerOff(Adafruit_NeoPixel&);
+    bool powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
+    bool powerOff(Adafruit_NeoPixel&);
 };
 
 #endif

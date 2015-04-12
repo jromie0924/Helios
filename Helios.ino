@@ -52,13 +52,23 @@ void loop() {
       if(results.value == filterVal) {
         irrecv.resume();
         delay(500);
-        randomizer->powerOn(strip, 30, irrecv, results);
-        isOff = false;
+        isOff = randomizer->powerOn(strip, 30, irrecv, results);
+        Serial.println(isOff);
       }
       //irrecv.resume();
     }
+    //Serial.println("still off");
   }
-  //  delay(500);
+  if(!isOff) {
+    if(irrecv.decode(&results)) {
+      if(results.value == filterVal) {
+        irrecv.resume();
+        delay(500);
+        isOff = randomizer->powerOff(strip);
+        Serial.println(isOff);
+      }
+    }
+  }
 }
 
 uint8_t splitColor ( uint32_t c, char value )

@@ -30,7 +30,7 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   /*
   ss1 = {245, 90, 20};
   ss2 = {245, 60, 20};
-  ss3 = {245, 55, 15}; 
+  ss3 = {245, 55, 15};
   // These last two are extremely red.
   // Neither are to be used as a "main" color.
   ss4 = {200, 40, 5};
@@ -44,7 +44,7 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   randomSeed(analogRead(0));
 }
 
-void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
+bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
   int r = 209,
       g = 150,
       b = 150;
@@ -52,12 +52,12 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
-    if(irrecv.decode(&results)) {
-      if(results.value == filterVal) {
+    if (irrecv.decode(&results)) {
+      if (results.value == filterVal) {
         irrecv.resume();
         delay(500);
         powerOff(strip);
-        return;
+        return true;
       }
     }
     double percentage = (double)a / 100;
@@ -71,9 +71,9 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
     strip.show();
     delay(wait);
   }
-  
+
   delay(500);
-  
+
   for (int i = 0; i <= lim; i++) {
     rnew = r + (dayP[0] - r) * i / lim;
     gnew = g + (dayP[1] - g) * i / lim;
@@ -82,9 +82,17 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
       strip.setPixelColor(n, strip.Color(rnew, gnew, bnew));
       strip.show();
     }
+    if (irrecv.decode(&results)) {
+      if (results.value == filterVal) {
+        irrecv.resume();
+        delay(500);
+        powerOff(strip);
+        return true;
+      }
+    }
     delay(30);
   }
-
+  return false;
 }
 
 void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
@@ -179,11 +187,11 @@ void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPix
   }
 }
 
-void Randomizer::powerOff(Adafruit_NeoPixel& strip) {
+bool Randomizer::powerOff(Adafruit_NeoPixel& strip) {
   int r, g, b;
-  for(int a = 100; a >= 0; a--) {
-    double percentage = (double)a/100;
-    for(int k = 0; k < strip.numPixels(); k++) {
+  for (int a = 100; a >= 0; a--) {
+    double percentage = (double)a / 100;
+    for (int k = 0; k < strip.numPixels(); k++) {
       r = (int)(splitColor(strip.getPixelColor(k), 'r') * percentage);
       g = (int)(splitColor(strip.getPixelColor(k), 'g') * percentage);
       b = (int)(splitColor(strip.getPixelColor(k), 'b') * percentage);
@@ -191,6 +199,7 @@ void Randomizer::powerOff(Adafruit_NeoPixel& strip) {
     }
     strip.show();
   }
+  return true;
 }
 
 
