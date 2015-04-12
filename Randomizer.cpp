@@ -1,6 +1,9 @@
+#include <IRremote.h>
+#include <IRremoteInt.h>
 #include <Adafruit_NeoPixel.h>
 #include "Randomizer.h"
 #include "Arduino.h"
+#define filterVal 581859881
 //#include <Time.h>
 
 Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
@@ -41,7 +44,7 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   randomSeed(analogRead(0));
 }
 
-void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
+void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
   int r = 209,
       g = 150,
       b = 150;
@@ -49,6 +52,14 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
+    if(irrecv.decode(&results)) {
+      if(results.value == filterVal) {
+        irrecv.resume();
+        delay(500);
+        powerOff(strip);
+        return;
+      }
+    }
     double percentage = (double)a / 100;
     int red_ = percentage * r;
     int green_ = percentage * g;
@@ -76,7 +87,7 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait) {
 
 }
 
-void Randomizer::randomize(Adafruit_NeoPixel& strip) {
+void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
   int numPixels = random(15) + 11; // max of 20 pixels can "flare" at a time (min of 10).
   int colors [numPixels][3];
   int pixels [numPixels];
@@ -135,41 +146,14 @@ void Randomizer::randomize(Adafruit_NeoPixel& strip) {
   }*/
 
   for (int a = 0; a < numPixels; a++) {
-    fadeToColor(dayP, colors[a], pixels[a], strip);
+    fadeToColor(dayP, colors[a], pixels[a], strip, irrecv, results);
     delay(100);
   }
   delay(10);
   for (int a = 0; a < numPixels; a++) {
-    fadeToColor(colors[a], dayP, pixels[a], strip);
+    fadeToColor(colors[a], dayP, pixels[a], strip, irrecv, results);
     delay(100);
   }
-}
-
-void Randomizer::flarePix(int rCol[3], int pix, Adafruit_NeoPixel& strip) {
-  /*
-    int randColor = rand() % 3 + 1;
-    int howManyPixels = rand() % 2 + 1;
-    if (howManyPixels == 1) {
-      int pix = rand() % strip.numPixels();
-      int randColor = rand() % 3 + 1;
-      int *col = new int[3];
-      switch (randColor) {
-        case 1:
-          col[0] = day1[0];
-          col[1] = day1[1];
-          col[2] = day1[2];
-      }
-      int r = splitColor(strip.getPixelColor(pix), 'r');
-      int g = splitColor(strip.getPixelColor(pix), 'g');
-      int b = splitColor(strip.getPixelColor(pix), 'b');
-      if (!(r == col[0] && g == col[1] && b == col[2])) {
-        int *nextCol = new int[3];
-        nextCol[0] = r;
-        nextCol[1] = g;
-        nextCol[2] = b;
-        fadeToColor(col, nextCol, pix, strip);
-      }
-    }*/
 }
 
 uint8_t Randomizer::splitColor( uint32_t c, char value )
@@ -182,7 +166,7 @@ uint8_t Randomizer::splitColor( uint32_t c, char value )
   }
 }
 
-void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixel& strip) {
+void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
   int n = 70;
   int rnew = 0, gnew = 0, bnew = 0;
   for (int i = 0; i <= n; i++) {
@@ -192,6 +176,20 @@ void Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPix
     strip.setPixelColor(pix, strip.Color(rnew, gnew, bnew));
     strip.show();
     delay(5);
+  }
+}
+
+void Randomizer::powerOff(Adafruit_NeoPixel& strip) {
+  int r, g, b;
+  for(int a = 100; a >= 0; a--) {
+    double percentage = (double)a/100;
+    for(int k = 0; k < strip.numPixels(); k++) {
+      r = (int)(splitColor(strip.getPixelColor(k), 'r') * percentage);
+      g = (int)(splitColor(strip.getPixelColor(k), 'g') * percentage);
+      b = (int)(splitColor(strip.getPixelColor(k), 'b') * percentage);
+      strip.setPixelColor(k, strip.Color(r, g, b));
+    }
+    strip.show();
   }
 }
 

@@ -1,20 +1,18 @@
+#include <IRremote.h>
+#include <IRremoteInt.h>
 #include <Adafruit_NeoPixel.h>
 #include "Randomizer.h"
 #include <avr/power.h>
-#include <Time.h>
+//#include <Time.h>
 
 #define PIN 6
+#define RECV_PIN 11
 
-//int day1 [3] = {209, 100, 39}; //jstart
-//int day2 [3] = {220, 0, 0}; //end
-//int currentColor[3] = {day1[0], day1[1], day1[2]};
-//int currentColors [45][3];
-
-/*
-int red = 200;
-int green = 40;
-int blue = 5;
-*/
+// Initialize the IR receiver.
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+bool isOff = true;
+#define filterVal 581859881
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -35,19 +33,32 @@ Randomizer *randomizer;
 
 void setup() {
   
+  // Start the receiver.
+  irrecv.enableIRIn();
+  
   Serial.begin(9600);
   //Randomizer rand_(strip);
   //randomizer.powerOn(strip, 10);
   randomizer = new Randomizer(strip);
-  randomizer->powerOn(strip, 30);  
+  //randomizer->powerOn(strip, 30);  
   delay(1000);
 }
 
 
 
 void loop() {
-  randomizer->randomize(strip);
-  delay(500);
+  while(isOff) {
+    if(irrecv.decode(&results)) {
+      if(results.value == filterVal) {
+        irrecv.resume();
+        delay(500);
+        randomizer->powerOn(strip, 30, irrecv, results);
+        isOff = false;
+      }
+      //irrecv.resume();
+    }
+  }
+  //  delay(500);
 }
 
 uint8_t splitColor ( uint32_t c, char value )

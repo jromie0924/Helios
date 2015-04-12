@@ -1,6 +1,8 @@
 #ifndef RANDOMIZER_H
 #define RANDOMIZER_H
 
+#include <IRremote.h>
+#include <IRremoteInt.h>
 #include "Arduino.h"
 #include <Adafruit_NeoPixel.h>
 
@@ -36,9 +38,10 @@ class Randomizer {
     
   public:
     Randomizer(Adafruit_NeoPixel&);
-    void randomize(Adafruit_NeoPixel&);
-    void fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&);
-    void powerOn(Adafruit_NeoPixel&, int);
+    void randomize(Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    void fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    void powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
+    void powerOff(Adafruit_NeoPixel&);
 };
 
 #endif
