@@ -45,8 +45,8 @@ class Randomizer {
     
   public:
     Randomizer(Adafruit_NeoPixel&);
-    void randomize(Adafruit_NeoPixel&, IRrecv&, decode_results&);
-    void fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    bool randomize(Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    int fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&, IRrecv&, decode_results&);
     bool powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
     bool powerOff(Adafruit_NeoPixel&);
 };

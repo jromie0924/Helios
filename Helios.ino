@@ -71,6 +71,10 @@ void loop() {
       }
     }
   }
+  bool switchOff = randomizer->randomize(strip, irrecv, results);
+  if(switchOff) {
+    isOff = true;
+  }
 }
 
 uint8_t splitColor ( uint32_t c, char value )
