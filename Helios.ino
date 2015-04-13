@@ -55,22 +55,23 @@ void loop() {
         irrecv.resume();
         delay(500);
         isOff = randomizer->powerOn(strip, 30, irrecv, results);
-        Serial.println(isOff);
       }
       //irrecv.resume();
     }
     //Serial.println("still off");
   }
-  if(!isOff) {
+  /*if(!isOff) {
     if(irrecv.decode(&results)) {
       if(results.value == filterVal) {
         irrecv.resume();
+        int stateFlag = randomizer->getStateFlag();
+        int retVal = randomizer->changeState(stateFlag, strip);
         delay(500);
         isOff = randomizer->powerOff(strip);
         Serial.println(isOff);
       }
     }
-  }
+  }*/
   bool switchOff = randomizer->randomize(strip, irrecv, results);
   if(switchOff) {
     isOff = true;
