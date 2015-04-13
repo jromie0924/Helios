@@ -7,6 +7,7 @@
 
 #define PIN 6
 #define RECV_PIN 11
+#define POWER_PIN 7
 
 // Initialize the IR receiver.
 IRrecv irrecv(RECV_PIN);
@@ -35,7 +36,8 @@ void setup() {
   
   // Start the receiver.
   irrecv.enableIRIn();
-  
+  pinMode(POWER_PIN, OUTPUT);
+  digitalWrite(POWER_PIN, HIGH);
   Serial.begin(9600);
   //Randomizer rand_(strip);
   //randomizer.powerOn(strip, 10);

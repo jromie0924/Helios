@@ -22,6 +22,13 @@ class Randomizer {
     int day3 [3];
     int day4 [3];
     
+    // Indicates the current state of the light.
+    // 0 = Off
+    // 1 = Daylight
+    // 2 = Sunset
+    // 3 = Night
+    int stateFlag;
+    
     // Sunset Colors
     // Arrays
     /*

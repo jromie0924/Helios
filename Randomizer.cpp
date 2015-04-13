@@ -12,14 +12,15 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   dimPerc = 0.4;
   strip.begin();
   strip.show(); // clear the strip (set all pixels to 'off')
+  stateFlag = 0;
 
   // Instantiate all arrays.
   // Daylight
-  dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150); // This is the primary day color. The preceding colors are for random selection.
-  day1[0] = 20; day1[1] = 90; day1[2] = 100;
-  day2[0] = 245; day2[1] = 170; day2[2] = 100;
-  day3[0] = 190; day3[1] = 170; day3[2] = 200;
-  day4[0] = 145; day4[1] = 190; day4[2] = 245;
+  dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39); // This is the primary day color. The preceding colors are for random selection.
+  day1[0] = 220; day1[1] = 97; day1[2] = 34;
+  day2[0] = 250; day2[1] = 120; day2[2] = 34;
+  day3[0] = 250; day3[1] = 150; day3[2] = 34;
+  day4[0] = 250; day4[1] = 115; day4[2] = 30;
   //day1 = {209, 100, 39};
   //day2 = {220, 97, 34};
   //day3 = {250, 120, 34};
@@ -46,9 +47,9 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 
 bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
   int r = 209,
-      g = 150,
-      b = 150;
-  //int r = dayP[0], g = dayP[1], b = dayP[2];
+      g = 100,
+      b = 39;
+  stateFlag = 1;
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
@@ -56,8 +57,30 @@ bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
       if (results.value == filterVal) {
         irrecv.resume();
         delay(500);
-        powerOff(strip);
-        return true;
+        switch(stateFlag) {
+          case 1:
+            dayP[0] = (int)(dimPerc * 245); dayP[1] = (int)(dimPerc * 90); dayP[2] = (int)(dimPerc * 20);
+            day1[0] = 245; day1[1] = 60; day1[2] = 20;
+            day2[0] = 245; day2[1] = 55; day2[2] = 15;
+            day3[0] = 200; day3[1] = 40; day3[2] = 5;
+            day4[0] = 245; day4[1] = 25; day4[2] = 5;
+            stateFlag = 2;
+            break;
+            
+          case 2:
+            dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150);
+            day1[0] = 250; day1[1] = 115; day1[2] = 30;
+            day2[0] = 245; day2[1] = 170; day2[2] = 100;
+            day3[0] = 190; day3[1] = 170; day3[2] = 200;
+            day4[0] = 135; day4[1] = 180; day4[2] = 245;
+            stateFlag = 3;
+            break;
+            
+          default:
+            break;
+        }
+        //powerOff(strip);
+        //return true;
       }
     }
     double percentage = (double)a / 100;
