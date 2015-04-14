@@ -46,11 +46,14 @@ class Randomizer {
   public:
     Randomizer(Adafruit_NeoPixel&);
     bool randomize(Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    void fadeToBaseColor(int[3], int[3], int, Adafruit_NeoPixel&);
     int fadeToColor(int[3], int[3], int, Adafruit_NeoPixel&, IRrecv&, decode_results&);
+    void fadeAllToColor(int[3], int[3], Adafruit_NeoPixel&);
     bool powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
     bool powerOff(Adafruit_NeoPixel&);
     int changeState(int, Adafruit_NeoPixel&);
     int getStateFlag();
+    void transition(Adafruit_NeoPixel&);
 };
 
 #endif
