@@ -219,6 +219,7 @@ bool Randomizer::powerOff(Adafruit_NeoPixel& strip) {
       strip.setPixelColor(k, strip.Color(r, g, b));
     }
     strip.show();
+    delay(15);
   }
   return true;
 }
@@ -285,7 +286,7 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
     case 2:
       transition(strip);
       dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150);
-      day1[0] = 250; day1[1] = 60; day1[2] = 100;
+      day1[0] = 250; day1[1] = 30; day1[2] = 220;
       day2[0] = 245; day2[1] = 170; day2[2] = 100;
       day3[0] = 190; day3[1] = 170; day3[2] = 200;
       day4[0] = 135; day4[1] = 180; day4[2] = 245;
