@@ -27,9 +27,6 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
 }
 
 void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
-  if(!(stateFlag == 0)) {
-    return;
-  }
   int r = 209,
       g = 100,
       b = 39;
@@ -41,7 +38,7 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
       if (results.value == filterVal) {
         delay(500);
         irrecv.resume();
-        changeState(stateFlag, strip);
+        changeState(stateFlag, strip, irrecv);
       }
     }
     double percentage = (double)a / 100;
@@ -71,12 +68,12 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
         irrecv.resume();
         delay(500);
         powerOff(strip);
-        return true;
+        return;
       }
     }
     delay(30);
   }
-  return false;
+  return;
 }
 
 void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
@@ -133,10 +130,8 @@ void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
   for (int a = 0; a < numPixels; a++) {
     switchState = fadeToColor(dayP, colors[a], pixels[a], strip, irrecv, results);
     if (switchState == 1) {
-      if(stateFlag == 3)
-        return true;
       Serial.println("fadeFlareIn");
-      return false;
+      return;
     }
     //changeState(stateFlag, strip);
     delay(100);
@@ -145,15 +140,13 @@ void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
   for (int a = 0; a < numPixels; a++) {
     switchState = fadeToColor(colors[a], dayP, pixels[a], strip, irrecv, results);
     if (switchState == 1) {
-      if(stateFlag == 3)
-        return true;
       Serial.println("fadeFlareOut");
-      return false;
+      return;
     }
     //changeState(stateFlag, strip);
     delay(100);
   }
-  return false;
+  return;
 }
 
 uint8_t Randomizer::splitColor( uint32_t c, char value )
@@ -170,12 +163,13 @@ int Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixe
   int n = 70;
   int rnew = 0, gnew = 0, bnew = 0;
   for (int i = 0; i <= n; i++) {
+    delay(10);
     if (irrecv.decode(&results)) {
       if (results.value == filterVal) {
         //irrecv.resume();
         delay(500);
         //Serial.println("changing state");
-        changeState(stateFlag, strip);
+        changeState(stateFlag, strip, irrecv);
         return 1;
         //powerOff(strip);
         //return true;
@@ -251,20 +245,20 @@ void Randomizer::transition(Adafruit_NeoPixel& strip) {
     oldCol[1] = splitColor(strip.getPixelColor(a), 'g');
     oldCol[2] = splitColor(strip.getPixelColor(a), 'b');
     if (!(oldCol[0] == dayP[0] && oldCol[1] == dayP[1] && oldCol[2] == dayP[2])) {
-      fadeToBaseColor(dayP, oldCol, a, strip);
+      fadeToBaseColor(oldCol, dayP, a, strip);
     }
   }
   switch (stateFlag) {
     case 1:
       int sunSet[3];
       sunSet[0] = (int)(dimPerc * 245); sunSet[1] = (int)(dimPerc * 90); sunSet[2] = (int)(dimPerc * 20);
-      fadeAllToColor(dayP, sunSet, strip);
+      fadeAllToColor(sunSet, dayP, strip);
       return;
 
     case 2:
       int night[3];
       night[0] = (int)(dimPerc * 209); night[1] = (int)(dimPerc * 150); night[2] = (int)(dimPerc * 150);
-      fadeAllToColor(dayP, night, strip);
+      fadeAllToColor(night, dayP, strip);
       return;
 
     default:
@@ -272,7 +266,7 @@ void Randomizer::transition(Adafruit_NeoPixel& strip) {
   }
 }
 
-void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
+void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv) {
   switch (flag) {
     case 0:/*
       dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39);
@@ -292,20 +286,23 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
       day3[0] = 200; day3[1] = 40; day3[2] = 5;
       day4[0] = 245; day4[1] = 25; day4[2] = 5;
       stateFlag = 2;
+      irrecv.resume();
       return;
 
     case 2:
       transition(strip);
       dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150);
-      day1[0] = 250; day1[1] = 115; day1[2] = 30;
+      day1[0] = 250; day1[1] = 60; day1[2] = 100;
       day2[0] = 245; day2[1] = 170; day2[2] = 100;
       day3[0] = 190; day3[1] = 170; day3[2] = 200;
       day4[0] = 135; day4[1] = 180; day4[2] = 245;
       stateFlag = 3;
+      irrecv.resume();
       return;
 
     case 3:
       powerOff(strip);
+      irrecv.resume();
       break;
 
     default:

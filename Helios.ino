@@ -49,21 +49,21 @@ void setup() {
 
 
 void loop() {
-  /*while(isOff) {
+  while(isOff) {
     if(irrecv.decode(&results)) {
       Serial.println("turning on");
       if(results.value == filterVal) {
         irrecv.resume();
         delay(500);
-        isOff = randomizer->powerOn(strip, 30, irrecv, results);
+        randomizer->powerOn(strip, 30, irrecv, results);
+        isOff = false;
+        Serial.println("Power on sequence finished.");
       }
       //irrecv.resume();
     }
-    //Serial.println("still off");
-  }*/
-  
-  randomizer->powerOn(strip);
+  }
   randomizer->randomize(strip, irrecv, results);
+  delay(500);
 }
 
 uint8_t splitColor ( uint32_t c, char value )

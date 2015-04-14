@@ -51,7 +51,7 @@ class Randomizer {
     void fadeAllToColor(int[3], int[3], Adafruit_NeoPixel&);
     void powerOn(Adafruit_NeoPixel&, int, IRrecv&, decode_results&);
     bool powerOff(Adafruit_NeoPixel&);
-    void changeState(int, Adafruit_NeoPixel&);
+    void changeState(int, Adafruit_NeoPixel&, IRrecv&);
     int getStateFlag();
     void transition(Adafruit_NeoPixel&);
 };
