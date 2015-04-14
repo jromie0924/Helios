@@ -34,13 +34,6 @@ void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
   int lim = 100;
   int rnew, gnew, bnew;
   for (int a = 0; a <= 100; a++) {
-    if (irrecv.decode(&results)) {
-      if (results.value == filterVal) {
-        delay(500);
-        irrecv.resume();
-        changeState(stateFlag, strip, irrecv);
-      }
-    }
     double percentage = (double)a / 100;
     int red_ = percentage * r;
     int green_ = percentage * g;
@@ -166,7 +159,7 @@ int Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixe
     delay(10);
     if (irrecv.decode(&results)) {
       if (results.value == filterVal) {
-        //irrecv.resume();
+        irrecv.resume();
         delay(500);
         //Serial.println("changing state");
         changeState(stateFlag, strip, irrecv);
@@ -252,13 +245,13 @@ void Randomizer::transition(Adafruit_NeoPixel& strip) {
     case 1:
       int sunSet[3];
       sunSet[0] = (int)(dimPerc * 245); sunSet[1] = (int)(dimPerc * 90); sunSet[2] = (int)(dimPerc * 20);
-      fadeAllToColor(sunSet, dayP, strip);
+      fadeAllToColor(dayP, sunSet, strip);
       return;
 
     case 2:
       int night[3];
       night[0] = (int)(dimPerc * 209); night[1] = (int)(dimPerc * 150); night[2] = (int)(dimPerc * 150);
-      fadeAllToColor(night, dayP, strip);
+      fadeAllToColor(dayP, night, strip);
       return;
 
     default:
@@ -286,7 +279,7 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
       day3[0] = 200; day3[1] = 40; day3[2] = 5;
       day4[0] = 245; day4[1] = 25; day4[2] = 5;
       stateFlag = 2;
-      irrecv.resume();
+     // irrecv.resume();
       return;
 
     case 2:
@@ -297,12 +290,12 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
       day3[0] = 190; day3[1] = 170; day3[2] = 200;
       day4[0] = 135; day4[1] = 180; day4[2] = 245;
       stateFlag = 3;
-      irrecv.resume();
+      //irrecv.resume();
       return;
 
     case 3:
       powerOff(strip);
-      irrecv.resume();
+    //  irrecv.resume();
       break;
 
     default:
