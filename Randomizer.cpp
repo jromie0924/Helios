@@ -21,31 +21,15 @@ Randomizer::Randomizer(Adafruit_NeoPixel& strip) { // Setting everything up.
   day2[0] = 250; day2[1] = 120; day2[2] = 34;
   day3[0] = 250; day3[1] = 150; day3[2] = 34;
   day4[0] = 250; day4[1] = 115; day4[2] = 30;
-  //day1 = {209, 100, 39};
-  //day2 = {220, 97, 34};
-  //day3 = {250, 120, 34};
-  //day4 = {250, 150, 34};
-  //day5 = {250, 115, 30};
-
-  // Sunset
-  /*
-  ss1 = {245, 90, 20};
-  ss2 = {245, 60, 20};
-  ss3 = {245, 55, 15};
-  // These last two are extremely red.
-  // Neither are to be used as a "main" color.
-  ss4 = {200, 40, 5};
-  ss5 = {245, 25, 5};
-  */
-  // Set the time for the random seed.
-  // Any time will do.
-  //setTime(9, 24, 00, 11, 59, 2015);
 
   // Set the random seed.
   randomSeed(analogRead(0));
 }
 
-bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
+void Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, decode_results& results) {
+  if(!(stateFlag == 0)) {
+    return;
+  }
   int r = 209,
       g = 100,
       b = 39;
@@ -95,7 +79,7 @@ bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
   return false;
 }
 
-bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
+void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_results& results) {
   int numPixels = random(15) + 11; // max of 20 pixels can "flare" at a time (min of 10).
   int colors [numPixels][3];
   int pixels [numPixels];
@@ -151,6 +135,7 @@ bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
     if (switchState == 1) {
       if(stateFlag == 3)
         return true;
+      Serial.println("fadeFlareIn");
       return false;
     }
     //changeState(stateFlag, strip);
@@ -162,6 +147,7 @@ bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
     if (switchState == 1) {
       if(stateFlag == 3)
         return true;
+      Serial.println("fadeFlareOut");
       return false;
     }
     //changeState(stateFlag, strip);
