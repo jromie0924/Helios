@@ -39,7 +39,6 @@ void setup() {
   pinMode(POWER_PIN, OUTPUT);
   digitalWrite(POWER_PIN, HIGH);
   Serial.begin(9600);
-  attachInterrupt(0, changeIndicator, CHANGE);
   //Randomizer rand_(strip);
   //randomizer.powerOn(strip, 10);
   randomizer = new Randomizer(strip);
@@ -47,21 +46,13 @@ void setup() {
   //delay(1000);
 }
 
-void changeIndicator() {
-  if(randomizer->stateFlag == 3) {
-    isOff == true;
-  }
-}
-
 void loop() {
-  while(isOff) {
+  while(randomizer->stateFlag == 0) {
     if(irrecv.decode(&results)) {
       Serial.println("turning on");
       if(results.value == filterVal) {
         irrecv.resume();
-        delay(500);
         randomizer->powerOn(strip, 30, irrecv, results);
-        isOff = false;
         Serial.println("Power on sequence finished.");
       }
       //irrecv.resume();

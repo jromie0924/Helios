@@ -158,8 +158,8 @@ int Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixe
   for (int i = 0; i <= n; i++) {
     delay(10);
     if (irrecv.decode(&results)) {
+      irrecv.resume();
       if (results.value == filterVal) {
-        irrecv.resume();
         delay(500);
         //Serial.println("changing state");
         changeState(stateFlag, strip, irrecv);
@@ -279,7 +279,7 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
       day3[0] = 200; day3[1] = 40; day3[2] = 5;
       day4[0] = 245; day4[1] = 25; day4[2] = 5;
       stateFlag = 2;
-     // irrecv.resume();
+      // irrecv.resume();
       return;
 
     case 2:
@@ -294,8 +294,14 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
       return;
 
     case 3:
+      dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39);
+      day1[0] = 220; day1[1] = 97; day1[2] = 34;
+      day2[0] = 250; day2[1] = 120; day2[2] = 34;
+      day3[0] = 250; day3[1] = 150; day3[2] = 34;
+      day4[0] = 250; day4[1] = 115; day4[2] = 30;
       powerOff(strip);
-    //  irrecv.resume();
+      stateFlag = 0;
+      //  irrecv.resume();
       break;
 
     default:
