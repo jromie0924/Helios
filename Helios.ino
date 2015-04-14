@@ -43,7 +43,7 @@ void setup() {
   //randomizer.powerOn(strip, 10);
   randomizer = new Randomizer(strip);
   //randomizer->powerOn(strip, 30);  
-  delay(1000);
+  //delay(1000);
 }
 
 
@@ -74,6 +74,7 @@ void loop() {
   }*/
   bool switchOff = randomizer->randomize(strip, irrecv, results);
   if(switchOff) {
+    Serial.println("here");
     isOff = true;
   }
 }

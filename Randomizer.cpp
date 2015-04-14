@@ -57,7 +57,7 @@ bool Randomizer::powerOn(Adafruit_NeoPixel& strip, int wait, IRrecv& irrecv, dec
       if (results.value == filterVal) {
         delay(500);
         irrecv.resume();
-        int retVal = changeState(stateFlag, strip);
+        changeState(stateFlag, strip);
       }
     }
     double percentage = (double)a / 100;
@@ -145,23 +145,24 @@ bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
     }
   }
 
-  int switchOff = 0;
+  int switchState = 0;
   for (int a = 0; a < numPixels; a++) {
-    switchOff = fadeToColor(dayP, colors[a], pixels[a], strip, irrecv, results);
-    if (switchOff == 1) {
-      //Serial.println("here");
-      //changeState(3, strip);
-      return true;
+    switchState = fadeToColor(dayP, colors[a], pixels[a], strip, irrecv, results);
+    if (switchState == 1) {
+      if(stateFlag == 3)
+        return true;
+      return false;
     }
     //changeState(stateFlag, strip);
     delay(100);
   }
   delay(10);
   for (int a = 0; a < numPixels; a++) {
-    switchOff = fadeToColor(colors[a], dayP, pixels[a], strip, irrecv, results);
-    if (switchOff == 1) {
-      //Serial.println("here");
-      return true;
+    switchState = fadeToColor(colors[a], dayP, pixels[a], strip, irrecv, results);
+    if (switchState == 1) {
+      if(stateFlag == 3)
+        return true;
+      return false;
     }
     //changeState(stateFlag, strip);
     delay(100);
@@ -188,7 +189,7 @@ int Randomizer::fadeToColor(int start[3], int end_[3], int pix, Adafruit_NeoPixe
         //irrecv.resume();
         delay(500);
         //Serial.println("changing state");
-        int retVal = changeState(stateFlag, strip);
+        changeState(stateFlag, strip);
         return 1;
         //powerOff(strip);
         //return true;
@@ -272,20 +273,20 @@ void Randomizer::transition(Adafruit_NeoPixel& strip) {
       int sunSet[3];
       sunSet[0] = (int)(dimPerc * 245); sunSet[1] = (int)(dimPerc * 90); sunSet[2] = (int)(dimPerc * 20);
       fadeAllToColor(dayP, sunSet, strip);
-      break;
+      return;
 
     case 2:
       int night[3];
-      night[0] = (int)(dimPerc * 245); night[1] = (int)(dimPerc * 90); night[2] = (int)(dimPerc * 20);
+      night[0] = (int)(dimPerc * 209); night[1] = (int)(dimPerc * 150); night[2] = (int)(dimPerc * 150);
       fadeAllToColor(dayP, night, strip);
-      break;
+      return;
 
     default:
-      break;
+      return;
   }
 }
 
-int Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
+void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
   switch (flag) {
     case 0:/*
       dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 100); dayP[2] = (int)(dimPerc * 39);
@@ -295,7 +296,7 @@ int Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
       day3[0] = 250; day3[1] = 150; day3[2] = 34;
       day4[0] = 250; day4[1] = 115; day4[2] = 30;
       stateFlag = 1;*/
-      break;
+      return;
 
     case 1:
       transition(strip);
@@ -305,7 +306,7 @@ int Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
       day3[0] = 200; day3[1] = 40; day3[2] = 5;
       day4[0] = 245; day4[1] = 25; day4[2] = 5;
       stateFlag = 2;
-      break;
+      return;
 
     case 2:
       transition(strip);
@@ -315,16 +316,16 @@ int Randomizer::changeState(int flag, Adafruit_NeoPixel& strip) {
       day3[0] = 190; day3[1] = 170; day3[2] = 200;
       day4[0] = 135; day4[1] = 180; day4[2] = 245;
       stateFlag = 3;
-      break;
+      return;
 
     case 3:
       powerOff(strip);
       break;
 
     default:
-      return -1;
+      return;
       break;
   }
-  return 1;
+  return;
 }
 
