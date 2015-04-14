@@ -149,7 +149,7 @@ bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
   for (int a = 0; a < numPixels; a++) {
     switchOff = fadeToColor(dayP, colors[a], pixels[a], strip, irrecv, results);
     if (switchOff == 1) {
-      Serial.println("here");
+      //Serial.println("here");
       //changeState(3, strip);
       return true;
     }
@@ -160,7 +160,7 @@ bool Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
   for (int a = 0; a < numPixels; a++) {
     switchOff = fadeToColor(colors[a], dayP, pixels[a], strip, irrecv, results);
     if (switchOff == 1) {
-      Serial.println("here");
+      //Serial.println("here");
       return true;
     }
     //changeState(stateFlag, strip);
@@ -218,8 +218,9 @@ void Randomizer::fadeToBaseColor(int start[3], int end_[3], int pix, Adafruit_Ne
 }
 
 void Randomizer::fadeAllToColor(int start[3], int end_[3], Adafruit_NeoPixel& strip) {
+  Serial.println("FadeAllToColor()");
   int n = 70;
-  int rnew = 0, gnew = 0, bnew = 0;
+  int rnew, gnew, bnew;
   for (int i = 0; i <= n; i++) {
     rnew = start[0] + (end_[0] - start[0]) * i / n;
     gnew = start[1] + (end_[1] - start[1]) * i / n;
@@ -227,6 +228,7 @@ void Randomizer::fadeAllToColor(int start[3], int end_[3], Adafruit_NeoPixel& st
     for (int a = 0; a < strip.numPixels(); a++) {
       strip.setPixelColor(a, strip.Color(rnew, gnew, bnew));
     }
+    //Serial.println("FadeAllToColor()");
     strip.show();
     delay(5);
   }
@@ -264,22 +266,22 @@ void Randomizer::transition(Adafruit_NeoPixel& strip) {
     if (!(oldCol[0] == dayP[0] && oldCol[1] == dayP[1] && oldCol[2] == dayP[2])) {
       fadeToBaseColor(dayP, oldCol, a, strip);
     }
-    switch (stateFlag) {
-      case 1:
-        int sunSet[3];
-        sunSet[0] = (int)(dimPerc * 245); sunSet[1] = (int)(dimPerc * 90); sunSet[2] = (int)(dimPerc * 20);
-        fadeAllToColor(dayP, sunSet, strip);
-        break;
+  }
+  switch (stateFlag) {
+    case 1:
+      int sunSet[3];
+      sunSet[0] = (int)(dimPerc * 245); sunSet[1] = (int)(dimPerc * 90); sunSet[2] = (int)(dimPerc * 20);
+      fadeAllToColor(dayP, sunSet, strip);
+      break;
 
-      case 2:
-        int night[3];
-        night[0] = (int)(dimPerc * 245); night[1] = (int)(dimPerc * 90); night[2] = (int)(dimPerc * 20);
-        fadeAllToColor(dayP, night, strip);
-        break;
+    case 2:
+      int night[3];
+      night[0] = (int)(dimPerc * 245); night[1] = (int)(dimPerc * 90); night[2] = (int)(dimPerc * 20);
+      fadeAllToColor(dayP, night, strip);
+      break;
 
-      default:
-        break;
-    }
+    default:
+      break;
   }
 }
 
