@@ -6,8 +6,8 @@
 //#include <Time.h>
 
 #define PIN 6
-#define RECV_PIN 11
-#define POWER_PIN 7
+#define RECV_PIN 7
+#define POWER_PIN 11
 
 // Initialize the IR receiver.
 IRrecv irrecv(RECV_PIN);
