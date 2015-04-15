@@ -80,7 +80,8 @@ void Randomizer::randomize(Adafruit_NeoPixel& strip, IRrecv& irrecv, decode_resu
       //dimmer = dimPerc;
     }
 
-    int randCol = rand() % 4 + 1; // select a color [1, 4]
+    //int randCol = rand() % 4 + 1; // select a color [1, 4]
+	int randCol = random(4) + 1;
     int red, green, blue;
     switch (randCol) {
       case 1:
@@ -285,8 +286,8 @@ void Randomizer::changeState(int flag, Adafruit_NeoPixel& strip, IRrecv& irrecv)
 
     case 2:
       transition(strip);
-      dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 150);
-      day1[0] = 250; day1[1] = 30; day1[2] = 220;
+      dayP[0] = (int)(dimPerc * 209); dayP[1] = (int)(dimPerc * 150); dayP[2] = (int)(dimPerc * 175);
+      day1[0] = 190; day1[1] = 15; day1[2] = 240;
       day2[0] = 245; day2[1] = 170; day2[2] = 100;
       day3[0] = 190; day3[1] = 170; day3[2] = 200;
       day4[0] = 135; day4[1] = 180; day4[2] = 245;
