@@ -32,3 +32,4 @@ For example: 110 = 6
 1 * 22 = 4
 0 + 2 + 4 = 6
 
+https://www.youtube.com/watch?v=QKJVXafNn3E&feature=em-upload_owner
