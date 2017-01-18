@@ -17,5 +17,6 @@ Known issues:
 IR response is weak. User needs to be mindful of exactly how Helios works or it could end up freezing and will need to be disconnected from power and reconnected. This is nothing more than a prototype.
 
 Check out the video, and shoot me an email if you have any questions!
+jromie0924@gmail.com
 
 https://youtu.be/QKJVXafNn3E
