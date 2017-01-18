@@ -1,4 +1,4 @@
-For a detailed explanation about what Helios is, head on over to http://jacksonromie.net/helios.html
+Helios is a light fixture designed to mimic the Sun. It has a light strip mounted on a cylinder with a large round plate on top. The light bounces off the wall and appears to the viewer as a solar eclipse. The individual lights on the strip are digitally-addressed, meaning that they can be randomly selected to fade to other colors (thus further mimicing the movement of the real sun).
 
 How the software works:
 
@@ -17,6 +17,5 @@ Known issues:
 IR response is weak. User needs to be mindful of exactly how Helios works or it could end up freezing and will need to be disconnected from power and reconnected. This is nothing more than a prototype.
 
 Check out the video, and shoot me an email if you have any questions!
-http://jacksonromie.net
 
 https://youtu.be/QKJVXafNn3E
